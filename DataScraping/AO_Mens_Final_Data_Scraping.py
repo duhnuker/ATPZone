@@ -4,7 +4,7 @@ import requests
 import sys
 import re
 
-all_finals_data = []  ## list to store all finals data
+ao_mens_finals_data = []  ## list to store all finals data
 
 target_url = "https://en.wikipedia.org/wiki/List_of_Australian_Open_men%27s_singles_champions"
 
@@ -87,16 +87,16 @@ try:
             rows.append(row_data)
         
         # Pandas DataFrame with cleaned headers
-        final_data_df = pd.DataFrame(rows, columns=cleaned_headers)
-        all_finals_data.append(final_data_df)
+        ao_mens_final_data_df = pd.DataFrame(rows, columns=cleaned_headers)
+        ao_mens_finals_data.append(ao_mens_final_data_df)
 
 except requests.exceptions.RequestException as e:
         print(f"Error: An error occurred during the request to {target_url}: {e}")
 except Exception as e:
         print(f"Error: An unexpected error occurred: {e}")
 
-if all_finals_data:
-    stat_df = pd.concat(all_finals_data) ## concatenating all of the stats
+if ao_mens_finals_data:
+    stat_df = pd.concat(ao_mens_finals_data) ## concatenating all of the stats
     stat_df.to_csv("australian_open_men_singles_champions.csv", index=False)
     print("Data successfully saved to australian_open_men_singles_champions.csv")
 else:
