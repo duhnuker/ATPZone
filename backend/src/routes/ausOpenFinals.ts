@@ -1,45 +1,28 @@
 import express, { Request, Response, Router } from 'express'
-import csv from 'csv-parser';
-import fs from 'fs';
+import { pool } from '../index.js';
 
 const router: Router = express.Router();
 
-router.get('/aomenssinglesfinals', (req: Request, res: Response) => {
+router.get('/aomenssinglesfinals', async (req: Request, res: Response) => {
     try {
-        const ausOpenMensFinalsData: any = [];
 
-        fs.createReadStream('../DataScraping/australian_open_men_singles_champions.csv')
-            .pipe(csv())
-            .on('data', (data) => ausOpenMensFinalsData.push(data))
-            .on('end', () => {
-                res.json(ausOpenMensFinalsData);
-            })
-            .on('error', (error) => {
-                console.error('Error reading CSV:', error);
-                res.status(500).json({ error: "Error reading CSV file" });
-            });
+        const data = await pool.query('SELECT * FROM aus_open_mens_singles ORDER BY year DESC');
+        res.json(data.rows);
 
     } catch (error: unknown) {
+        console.error('Database error:', error);
         res.status(500).json({ error: "Error fetching aus open mens finals data" });
     }
 });
 
-router.get('/aowomenssinglesfinals', (req: Request, res: Response) => {
+router.get('/aowomenssinglesfinals', async (req: Request, res: Response) => {
     try {
-        const ausOpenWomensFinalsData: any = [];
 
-        fs.createReadStream('../DataScraping/australian_open_women_singles_champions.csv')
-            .pipe(csv())
-            .on('data', (data) => ausOpenWomensFinalsData.push(data))
-            .on('end', () => {
-                res.json(ausOpenWomensFinalsData);
-            })
-            .on('error', (error) => {
-                console.error('Error reading CSV:', error);
-                res.status(500).json({ error: "Error reading CSV file" });
-            });
+        const data = await pool.query('SELECT * FROM aus_open_womens_singles ORDER BY year DESC');
+        res.json(data.rows);
 
     } catch (error: unknown) {
+        console.error('Database error:', error);
         res.status(500).json({ error: "Error fetching aus open womens finals data" });
     }
 });

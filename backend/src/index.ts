@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const pool = new Pool({
+export const pool = new Pool({
     user: process.env.PGUSER,
     host: process.env.PGHOST,
     database: process.env.PGDBNAME,
@@ -17,7 +17,7 @@ const pool = new Pool({
 });
 
 
-pool.query('SELECT NOW()', (err, res) => {
+pool.query('SELECT NOW()', (err) => {
     if (err) {
         console.error("Database connection error:", err);
     } else {
@@ -31,7 +31,7 @@ app.get("/", async (req: Request, res: Response) => {
     res.send("Hello World");
 });
 
-app.use('/api/ausOpenFinals', ausOpenFinals);
+app.use('/api/ausopenfinals', ausOpenFinals);
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);

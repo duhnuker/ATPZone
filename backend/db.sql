@@ -10,7 +10,6 @@ CREATE TABLE aus_open_mens_singles (
     runner_up_country VARCHAR(3) NOT NULL,
     runner_up VARCHAR(100) NOT NULL,
     score VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE aus_open_womens_singles (
@@ -21,5 +20,4 @@ CREATE TABLE aus_open_womens_singles (
     runner_up_country VARCHAR(3) NOT NULL,
     runner_up VARCHAR(100) NOT NULL,
     score VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
 );
