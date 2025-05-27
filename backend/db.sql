@@ -9,7 +9,7 @@ CREATE TABLE aus_open_mens_singles (
     champion_name VARCHAR(100) NOT NULL,
     runner_up_country VARCHAR(3) NOT NULL,
     runner_up VARCHAR(100) NOT NULL,
-    score VARCHAR(50) NOT NULL,
+    score VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE aus_open_womens_singles (
@@ -19,5 +19,5 @@ CREATE TABLE aus_open_womens_singles (
     champion_name VARCHAR(100) NOT NULL,
     runner_up_country VARCHAR(3) NOT NULL,
     runner_up VARCHAR(100) NOT NULL,
-    score VARCHAR(50) NOT NULL,
+    score VARCHAR(50) NOT NULL
 );
