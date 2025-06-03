@@ -11,7 +11,19 @@ router.get('/aomenssinglesfinals', async (req: Request, res: Response) => {
 
     } catch (error: unknown) {
         console.error('Database error:', error);
-        res.status(500).json({ error: "Error fetching aus open mens finals data" });
+        res.status(500).json({ error: "Error fetching aus open mens singles finals data" });
+    }
+});
+
+router.get('/aomensdoublesfinals', async (req: Request, res: Response) => {
+    try {
+
+        const data = await pool.query('SELECT * FROM aus_open_mens_doubles ORDER BY year DESC');
+        res.json(data.rows);
+
+    } catch (error: unknown) {
+        console.error('Database error:', error);
+        res.status(500).json({ error: "Error fetching aus open mens doubles finals data" });
     }
 });
 
@@ -23,7 +35,7 @@ router.get('/aowomenssinglesfinals', async (req: Request, res: Response) => {
 
     } catch (error: unknown) {
         console.error('Database error:', error);
-        res.status(500).json({ error: "Error fetching aus open womens finals data" });
+        res.status(500).json({ error: "Error fetching aus open womens singles finals data" });
     }
 });
 
