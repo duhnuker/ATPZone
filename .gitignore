@@ -11,7 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-DataScraping/ATPZone
+DataScraping/AOFever
 
 # Editor directories and files
 .vscode/*
