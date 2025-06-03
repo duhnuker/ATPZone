@@ -87,7 +87,7 @@ except Exception as e:
 
 if ao_womens_finals_data:
     stat_df = pd.concat(ao_womens_finals_data)
-    stat_df.to_csv("australian_open_women_singles_champions.csv", index=False)
-    print("Data successfully saved to australian_open_women_singles_champions.csv")
+    stat_df.to_csv("australian_open_women_singles_finals_data.csv", index=False)
+    print("Data successfully saved to australian_open_women_singles_finals_data.csv")
 else:
     print("No data was extracted.")
