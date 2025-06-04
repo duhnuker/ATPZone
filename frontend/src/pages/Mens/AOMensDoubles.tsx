@@ -46,7 +46,7 @@ const AOMensDoubles = () => {
 
   return (
     <div>
-      <Heading>Australian Open Men's Singles Winners</Heading>
+      <Heading>Australian Open Men's Doubles Winners</Heading>
       
       <Table.Root>
         <Table.Header>

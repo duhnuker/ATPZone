@@ -23,9 +23,9 @@ try:
 
     table = None
     # The 'Open era' table is typically the second table with these classes (index 1)
-    if len(all_championship_tables) > 1:
+    if len(all_championship_tables) > 0:
         # Select the second table
-        table = all_championship_tables[1] 
+        table = all_championship_tables[0] 
 
 
     if table is None:
