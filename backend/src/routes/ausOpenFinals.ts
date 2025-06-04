@@ -39,4 +39,16 @@ router.get('/aowomenssinglesfinals', async (req: Request, res: Response) => {
     }
 });
 
+router.get('/aowomensdoublesfinals', async (req: Request, res: Response) => {
+    try {
+
+        const data = await pool.query('SELECT * FROM aus_open_womens_doubles ORDER BY year DESC');
+        res.json(data.rows);
+
+    } catch (error: unknown) {
+        console.error('Database error:', error);
+        res.status(500).json({ error: "Error fetching aus open womens doubles finals data" });
+    }
+});
+
 export default router;
