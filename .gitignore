@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 DataScraping/AOFever
+chromedriver.exe
 
 # Editor directories and files
 .vscode/*
