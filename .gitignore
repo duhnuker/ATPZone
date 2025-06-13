@@ -7,12 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-DataScraping/AOFever
-chromedriver.exe
+
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +19,12 @@ chromedriver.exe
 *.njsproj
 *.sln
 *.sw?
+node_modules
+dist
+dist-ssr
+*.local
+DataScraping/AOFever
+.env
+chromedriver.exe
+__pycache__
+
