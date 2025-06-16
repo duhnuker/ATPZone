@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Heading, Text, Button } from '@radix-ui/themes';
+import { Box, Container, Flex, Heading, Text, Button, Card } from '@radix-ui/themes';
 import { useState } from 'react';
 import axios from 'axios';
 import PlayerAutocomplete from '../../components/PlayerAutocomplete';
@@ -9,7 +9,11 @@ const MensHeadToHead = () => {
     const [player2, setPlayer2] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
-    const { players, loading, error } = usePlayerData();
+    const { players, loading, error, getPlayerStats } = usePlayerData();
+
+    // Get player stats
+    const player1Stats = player1 ? getPlayerStats(player1) : null;
+    const player2Stats = player2 ? getPlayerStats(player2) : null;
 
     const handleSubmit = async () => {
         if (!player1 || !player2) {
@@ -80,7 +84,7 @@ const MensHeadToHead = () => {
                     <Heading>MensHeadToHead</Heading>
                 </Box>
                 <Flex direction="column" align="center" gap="4" style={{ marginTop: '20px' }}>
-                    <Flex justify="center" gap="4">
+                    <Flex justify="center" gap="4" style={{ width: '100%', maxWidth: '800px' }}>
                         <PlayerAutocomplete
                             placeholder="Search player 1:"
                             onPlayerSelect={setPlayer1}
@@ -93,14 +97,74 @@ const MensHeadToHead = () => {
                         />
                     </Flex>
 
+                    {/* Player Stats Display */}
                     {(player1 || player2) && (
-                        <Box className='text-center'>
-                            <Text size="2">
-                                {player1 && `Player 1: ${player1}`}
-                                {player1 && player2 && ' | '}
-                                {player2 && `Player 2: ${player2}`}
-                            </Text>
-                        </Box>
+                        <Flex gap="4" style={{ width: '100%', maxWidth: '800px' }}>
+                            {/* Player 1 Stats */}
+                            <Box style={{ flex: 1 }}>
+                                {player1 && (
+                                    <Card style={{ padding: '16px', textAlign: 'center' }}>
+                                        <Heading size="3" style={{ marginBottom: '8px' }}>
+                                            {player1}
+                                        </Heading>
+                                        {player1Stats ? (
+                                            <Flex direction="column" gap="2">
+                                                <Text size="2">
+                                                    <strong>Rank:</strong> {player1Stats.rank}
+                                                </Text>
+                                                <Text size="2">
+                                                    <strong>Points:</strong> {player1Stats.points}
+                                                </Text>
+                                                <Text size="2" color="gray">
+                                                    <strong>As of:</strong> {player1Stats.date}
+                                                </Text>
+                                            </Flex>
+                                        ) : (
+                                            <Text size="2" color="gray">
+                                                No stats available
+                                            </Text>
+                                        )}
+                                    </Card>
+                                )}
+                            </Box>
+
+                            {/* VS Divider */}
+                            {player1 && player2 && (
+                                <Flex align="center" justify="center" style={{ minWidth: '40px' }}>
+                                    <Text size="4" weight="bold" color="gray">
+                                        VS
+                                    </Text>
+                                </Flex>
+                            )}
+
+                            {/* Player 2 Stats */}
+                            <Box style={{ flex: 1 }}>
+                                {player2 && (
+                                    <Card style={{ padding: '16px', textAlign: 'center' }}>
+                                        <Heading size="3" style={{ marginBottom: '8px' }}>
+                                            {player2}
+                                        </Heading>
+                                        {player2Stats ? (
+                                            <Flex direction="column" gap="2">
+                                                <Text size="2">
+                                                    <strong>Rank:</strong> {player2Stats.rank}
+                                                </Text>
+                                                <Text size="2">
+                                                    <strong>Points:</strong> {player2Stats.points}
+                                                </Text>
+                                                <Text size="2" color="gray">
+                                                    <strong>As of:</strong> {player2Stats.date}
+                                                </Text>
+                                            </Flex>
+                                        ) : (
+                                            <Text size="2" color="gray">
+                                                No stats available
+                                            </Text>
+                                        )}
+                                    </Card>
+                                )}
+                            </Box>
+                        </Flex>
                     )}
 
                     <Button
