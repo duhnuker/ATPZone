@@ -2,14 +2,22 @@ import { Box, Container, Flex, Heading, Text, Button, Card } from '@radix-ui/the
 import { useState } from 'react';
 import axios from 'axios';
 import PlayerAutocomplete from '../../components/PlayerAutocomplete';
+import FilterDropdown from '../../components/FilterDropdown';
 import { usePlayerData } from '../../hooks/usePlayerData';
+import { useAtpData } from '../../hooks/useAtpData';
+import BettingOdds from '../../components/BettingOdds';
 
 const MensHeadToHead = () => {
     const [player1, setPlayer1] = useState('');
     const [player2, setPlayer2] = useState('');
+    const [selectedSurface, setSelectedSurface] = useState('');
+    const [selectedRound, setSelectedRound] = useState('');
+    const [selectedBestOf, setSelectedBestOf] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
-    const { players, loading, error, getPlayerStats } = usePlayerData();
+    
+    const { players, loading: playersLoading, error: playersError, getPlayerStats } = usePlayerData();
+    const { filters, loading: filtersLoading, error: filtersError } = useAtpData();
 
     // Get player stats
     const player1Stats = player1 ? getPlayerStats(player1) : null;
@@ -32,7 +40,10 @@ const MensHeadToHead = () => {
         try {
             const response = await axios.post('/api/getmensinput', {
                 player1,
-                player2
+                player2,
+                surface: selectedSurface || null,
+                round: selectedRound || null,
+                bestOf: selectedBestOf || null
             });
 
             setSubmitMessage('Players submitted successfully!');
@@ -51,13 +62,16 @@ const MensHeadToHead = () => {
         }
     };
 
+    const loading = playersLoading || filtersLoading;
+    const error = playersError || filtersError;
+
     if (loading) {
         return (
             <Box>
                 <Container>
                     <Box className='text-center'>
                         <Heading>MensHeadToHead</Heading>
-                        <Text>Loading player data...</Text>
+                        <Text>Loading data...</Text>
                     </Box>
                 </Container>
             </Box>
@@ -70,7 +84,7 @@ const MensHeadToHead = () => {
                 <Container>
                     <Box className='text-center'>
                         <Heading>MensHeadToHead</Heading>
-                        <Text color="red">Error loading player data: {error}</Text>
+                        <Text color="red">Error loading data: {error}</Text>
                     </Box>
                 </Container>
             </Box>
@@ -84,6 +98,7 @@ const MensHeadToHead = () => {
                     <Heading>MensHeadToHead</Heading>
                 </Box>
                 <Flex direction="column" align="center" gap="4" style={{ marginTop: '20px' }}>
+                    {/* Player Selection */}
                     <Flex justify="center" gap="4" style={{ width: '100%', maxWidth: '800px' }}>
                         <PlayerAutocomplete
                             placeholder="Search player 1:"
@@ -96,6 +111,33 @@ const MensHeadToHead = () => {
                             players={players}
                         />
                     </Flex>
+
+                    {/* Filter Dropdowns */}
+                    <Box style={{ width: '100%', maxWidth: '800px' }}>
+                        <Text size="3" weight="bold" style={{ marginBottom: '8px', display: 'block' }}>
+                            Filters (Optional)
+                        </Text>
+                        <Flex justify="center" gap="3" wrap="wrap">
+                            <FilterDropdown
+                                placeholder="Select Surface"
+                                options={filters.surfaces}
+                                value={selectedSurface}
+                                onValueChange={setSelectedSurface}
+                            />
+                            <FilterDropdown
+                                placeholder="Select Round"
+                                options={filters.rounds}
+                                value={selectedRound}
+                                onValueChange={setSelectedRound}
+                            />
+                            <FilterDropdown
+                                placeholder="Select Best Of"
+                                options={filters.bestOfs}
+                                value={selectedBestOf}
+                                onValueChange={setSelectedBestOf}
+                            />
+                        </Flex>
+                    </Box>
 
                     {/* Player Stats Display */}
                     {(player1 || player2) && (
@@ -166,6 +208,46 @@ const MensHeadToHead = () => {
                             </Box>
                         </Flex>
                     )}
+
+                    {/* Selected Filters Display */}
+                    {(selectedSurface || selectedRound || selectedBestOf) && (
+                        <Card style={{ padding: '12px', width: '100%', maxWidth: '800px' }}>
+                            <Text size="2" weight="bold" style={{ marginBottom: '4px' }}>
+                                Active Filters:
+                            </Text>
+                            <Flex gap="2" wrap="wrap">
+                                {selectedSurface && (
+                                    <Text size="1" style={{ 
+                                        backgroundColor: 'var(--accent-3)', 
+                                        padding: '2px 6px', 
+                                        borderRadius: '4px' 
+                                    }}>
+                                        Surface: {selectedSurface}
+                                    </Text>
+                                )}
+                                {selectedRound && (
+                                    <Text size="1" style={{ 
+                                        backgroundColor: 'var(--accent-3)', 
+                                        padding: '2px 6px', 
+                                        borderRadius: '4px' 
+                                    }}>
+                                        Round: {selectedRound}
+                                    </Text>
+                                )}
+                                {selectedBestOf && (
+                                    <Text size="1" style={{ 
+                                        backgroundColor: 'var(--accent-3)', 
+                                        padding: '2px 6px', 
+                                        borderRadius: '4px' 
+                                    }}>
+                                        Best of: {selectedBestOf}
+                                    </Text>
+                                )}
+                            </Flex>
+                        </Card>
+                    )}
+
+                    <BettingOdds />
 
                     <Button
                         onClick={handleSubmit}
