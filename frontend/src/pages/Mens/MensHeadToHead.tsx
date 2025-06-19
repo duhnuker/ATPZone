@@ -15,6 +15,11 @@ const MensHeadToHead = () => {
     const [selectedBestOf, setSelectedBestOf] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitMessage, setSubmitMessage] = useState('');
+    const [bettingOdds, setBettingOdds] = useState({
+        player1Odds: '1.50',
+        player2Odds: '1.50',
+        enabled: false
+    });
     
     const { players, loading: playersLoading, error: playersError, getPlayerStats } = usePlayerData();
     const { filters, loading: filtersLoading, error: filtersError } = useAtpData();
@@ -22,6 +27,10 @@ const MensHeadToHead = () => {
     // Get player stats
     const player1Stats = player1 ? getPlayerStats(player1) : null;
     const player2Stats = player2 ? getPlayerStats(player2) : null;
+
+    const handleOddsChange = (odds: { player1Odds: string; player2Odds: string; enabled: boolean }) => {
+        setBettingOdds(odds);
+    };
 
     const handleSubmit = async () => {
         if (!player1 || !player2) {
@@ -38,13 +47,25 @@ const MensHeadToHead = () => {
         setSubmitMessage('');
 
         try {
-            const response = await axios.post('/api/getmensinput', {
+            const player1OddsValue = bettingOdds.player1Odds || '1.50';
+            const player2OddsValue = bettingOdds.player2Odds || '1.50';
+
+            // Prepare the request payload with player stats
+            const requestPayload = {
                 player1,
                 player2,
-                surface: selectedSurface || null,
-                round: selectedRound || null,
-                bestOf: selectedBestOf || null
-            });
+                surface: selectedSurface,
+                round: selectedRound,
+                bestOf: selectedBestOf,
+                player1Odds: player1OddsValue,
+                player2Odds: player2OddsValue,
+                ...(player1Stats && { player1Stats }),
+                ...(player2Stats && { player2Stats })
+            };
+
+            console.log('Sending request with player stats:', requestPayload);
+
+            const response = await axios.post('/api/predictmenswinner', requestPayload);
 
             setSubmitMessage('Players submitted successfully!');
             console.log('Response:', response.data);
@@ -247,7 +268,7 @@ const MensHeadToHead = () => {
                         </Card>
                     )}
 
-                    <BettingOdds />
+                    <BettingOdds onOddsChange={handleOddsChange} />
 
                     <Button
                         onClick={handleSubmit}
